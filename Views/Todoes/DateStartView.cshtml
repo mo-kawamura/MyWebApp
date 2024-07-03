@@ -1,0 +1,182 @@
+﻿@model PaginatedList<MyWebApp.Models.Todo>
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+
+<h1>一覧</h1>
+
+<p>
+    <a asp-action="Create">新規作成</a>
+</p>
+
+
+<div class="d-contents">
+    <!--d-contentsで横並びを指定-->
+    <article>
+        <!--検索ボックス-->
+        <form asp-controller="Todoes" asp-action="Index">
+            <div class="input-group">
+                <input type="text" name="FindStr" class="box-edit" placeholder="名前を検索する" value="@ViewData["CurrentFilter"]">
+                <input type="submit" class="send-edit" value="検索">
+            </div>
+        </form>
+        <!--呼び出す場所の指定。@ViewData["DateSortParm"]を利用して、適切なクエリ文字列使用含むハイパーリンクを設定-->
+
+        <div class="button-edit-di">
+            <a asp-action="DateStartView" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="button-edit-o">期限で並べ替え</a>
+        </div>
+
+        @foreach (var item in Model)
+        {
+            <details>
+
+                <summary>@Html.DisplayFor(modelItem => item.Title)<span class="span-check">@Html.CheckBox("check", false, new { @class = "form-check-input" })</span></summary>
+                <div class="article-content">
+                    <!--ボックスの中身-->
+                    <section class="section-arrange">
+                        <h6>名前</h6>
+                        <p>@Html.DisplayFor(modelItem => item.Person.Name)</p>
+                    </section>
+                    <section class="section-arrange">
+                        <h6>詳細</h6>
+                        <p> @Html.DisplayFor(modelItem => item.content)</p>
+                    </section>
+                    <section class="section-arrange">
+                        <h6>期間</h6>
+                        <p>@Html.DisplayFor(modelItem => item.DateStart)～@Html.DisplayFor(modelItem => item.DateEnd)</p>
+                    </section>
+                    <section class="section-arrange">
+                        <h6>期限</h6>
+                        @if (item.DateEnd.Date <= DateTime.Today)
+                        {
+                            <!--.Dateで取り出すと細かい時間まで出されるので、そうでない場合/で区切り個別に取り出す。
+                            時間が必要な場合あるので特にいらない説もある。-->
+                            <p>@Html.DisplayFor(modelItem => item.DateEnd)</p>
+                        }
+                        else
+                        {
+                            <p>@Html.DisplayFor(modelItem => item.DateEnd)</p>
+                        }
+                        <!--ここから予定時刻を超過しているか確認。超えてなければ超えてない分の文字列を出す。-->
+                        <!--超過している場合、太字で表記（cssのtBoldより）-->
+                        <!--TimeSpan型で日付の差分を取り出し、Days（プロパティ？）でその日付のみ取り出す-->
+                        <h6>備考</h6>
+                        @if (item.DateStart <= DateTime.Now && DateTime.Now <= item.DateEnd)
+                        {
+                            <p>
+                                あと@(item.DateEnd.Day - DateTime.Now.Day)日
+                            </p>
+                        }
+                        else if (item.DateStart <= DateTime.Now && item.DateEnd <= DateTime.Now)
+                        {
+                            TimeSpan ts = DateTime.Now.Date.Subtract(item.DateEnd.Date);
+                            int d = ts.Days;
+                            <p class="tBold">期限を @d 日超えています。</p>
+                        }
+                        else
+                        {
+                            <p>開始前です</p>
+                        }
+                    </section>
+                    <section>
+                        <div class="button-edit">
+                            <a asp-action="Edit" asp-route-id="@item.TodoId" class="button-edit-e">編集</a> |
+                            <a asp-action="Delete" asp-route-id="@item.TodoId" class="button-edit-d">削除</a>
+                        </div>
+                    </section>
+                </div>
+            </details>
+        }
+
+        <!--Microsoftのチュートリアル一部改変-->
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            var active = "";
+
+        }
+
+        <div class="page-button" aria-label="">
+            <!--ボタンの表示-->
+            <ul class="pagination page-button">
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   asp-for="name"
+                   class="btn btn-default @prevDisabled">
+                    前へ
+                </a>
+
+                <!--改変部分-->
+                @for (int i = 1; i < @Model.TotalPages + 1; i++)
+                {
+                    active = Model.PageIndex == i ? "active" : "";
+                    if (i == 1)
+                    {
+                        <li class="page-item @active">
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@i" class="page-link "
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                               asp-for="name"
+                               class="btn btn-default @prevDisabled">
+                                @i
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            ...　
+                        </li>
+                    }
+                    else if (i != 1 && i == @Model.PageIndex && i != @Model.TotalPages)
+                    {
+                        <li class="page-item @active">
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@i" class="page-link "
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                               asp-for="name">
+
+                                @i
+                            </a>
+                        </li>
+                        <li class="page-item ">
+                            ...　
+                        </li>
+                    }
+                    else if (i == @Model.TotalPages)
+                    {
+                        <li class="page-item @active">
+                            <a asp-action="Index"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@i" class="page-link "
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                @i
+                            </a>
+                        </li>
+
+                    }
+
+                }
+
+
+                <!--ボタンの表示-->
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                   class="btn btn-default @nextDisabled">
+                    次へ
+                </a>
+            </ul>
+        </div>
+    </article>
+
+    <aside>
+        <h6>空白を埋めるゾーンです。</h6>
+        <p>文字をいい感じに並べています。これは文字列のサンプルです。サンプルです。カレンダーを入れたい</p>
+    </aside>
+
+</div><!--d-contentsここまで-->

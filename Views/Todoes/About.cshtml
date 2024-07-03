@@ -1,0 +1,32 @@
+﻿@model IEnumerable<MyWebApp.Models.todoCreate.todoCreateGroup>
+
+@{
+    ViewData["Title"] = "Student Body Statistics";
+}
+
+<h2>あばうと</h2>
+
+<table>
+    <tr >
+        <th>
+            登録日
+        </th>
+        <th >
+            登録人数
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentDate)
+            </td>
+
+            <td >
+                @item.PersonCount
+            </td>
+
+        </tr>
+    }
+</table>

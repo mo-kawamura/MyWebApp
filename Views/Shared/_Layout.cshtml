@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyWebApp</title>
+    <!--ファビコン（上に表示されるタイトルの横の画像）-->
+    <link rel="icon" type="image/png" href="images/icon_1.png" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!--<link href="../reset.css" rel="stylesheet" type="text/css">-->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyWebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header id="header">
+        <nav>
+            <ul>
+                <li class="h1"> MyWebApp </li>
+                <li class="has-child"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <!--ここから-->
+                <li class="has-child">
+                    <a asp-controller="People" asp-action="Index">名簿</a>
+                    <ul>
+                        <li><a asp-controller="People" asp-action="Index">一覧</a></li>
+                        <li><a asp-controller="People" asp-action="Create">新規作成</a></li>
+
+                    </ul>
+                </li><!--ここまでが階層ありの塊-->
+
+                <li class="has-child">
+                    <a asp-area="" asp-controller="Todoes" asp-action="Index">Todo</a>
+                    <ul>
+                        <li><a asp-area="" asp-controller="Todoes" asp-action="Index">一覧/検索</a></li>
+                        <li><a asp-area="" asp-controller="Todoes" asp-action="DateStartView">チェック</a></li>
+                        <li><a asp-area="" asp-controller="Todoes" asp-action="Create">作成</a></li>
+                        <li><a asp-area="" asp-controller="Todoes" asp-action="About">作成日時</a></li>
+                        <li><a href="#">ダミー１</a></li>
+                        <li><a href="#">ダミー２</a></li>
+                        <li><a href="#">ダミー３</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="box-shadow mb-3">
+         <!--フッター-->
+            <p>© All rights reserved by momokokawamura.</p>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

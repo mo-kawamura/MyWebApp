@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MyWebApp.Models.Person>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>名簿</h1>
+
+<p>
+    <a asp-action="Create">新規作成</a>
+</p>
+<!--検索ボックス-->
+    <form asp-controller="People" asp-action="Index">
+        <div class="input-group">
+            <input type="text" name="strSerch" class="box-edit" placeholder="登録者を検索する" >
+            <span class="input-group-btn">
+                <input type="submit" class="btn btn-primary px-4" value="検索">
+            </span>
+        </div>
+    </form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mail)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mail)
+            </td>
+            <td>
+                <div class="button-edit">
+                <a asp-action="Edit" asp-route-id="@item.PersonId" class="button-edit-e">編集</a> |
+                <a asp-action="Delete" asp-route-id="@item.PersonId" class="button-edit-d">削除</a>
+                </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
