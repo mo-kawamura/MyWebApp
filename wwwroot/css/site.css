@@ -1,0 +1,442 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: "Yu Gothic Medium", sans-serif;
+    background-color: #fffcf7;
+}
+
+img {
+    max-width: 100%;
+}
+
+.home-content {
+    text-align: center;
+    margin-top: 10%;
+}
+
+/*========= ナビゲーションバーのCSS ===============*/
+
+/*==全体*/
+nav {
+    background: #333;
+    color: #fff;
+    text-align: center;
+}
+    /*リスト全体*/
+    nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: left;
+    }
+        /*2階層目以降は横並びにしない*/
+        nav ul ul {
+            display: block;
+        }
+
+        /*下の階層のulや矢印の基点にするためliにrelativeを指定*/
+        nav ul li {
+            position: relative;
+        }
+
+            /*ナビゲーションのリンク設定*/
+            nav ul li a {
+                display: block;
+                text-decoration: none;
+                color: #999;
+                padding: 20px 35px;
+                transition: all .3s;
+            }
+
+            nav ul li li a {
+                padding: 10px 35px;
+            }
+
+            nav ul li a:hover {
+                color: #fff;
+            }
+
+            /*矢印の設定*/
+
+            /*2階層目を持つliの矢印の設定*/
+            nav ul li.has-child::before {
+                content: '';
+                position: absolute;
+                left: 15px;
+                top: 25px;
+                width: 6px;
+                height: 6px;
+                border-top: 2px solid #999;
+                border-right: 2px solid #999;
+                transform: rotate(135deg);
+            }
+
+        /*3階層目を持つliの矢印の設定　後で消す*/
+        nav ul ul li.has-child::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 17px;
+            width: 6px;
+            height: 6px;
+            border-top: 2px solid #fff;
+            border-right: 2px solid #fff;
+            transform: rotate(45deg);
+        }
+
+    /*== 2・3階層目の共通設定 */
+
+    /*下の階層を持っているulの指定*/
+    nav li.has-child ul {
+        /*絶対配置で位置を指定*/
+        position: absolute;
+        left: 0;
+        top: 62px;
+        z-index: 4;
+        /*形状を指定*/
+        background: #f69679;
+        width: 180px;
+        /*はじめは非表示*/
+        visibility: hidden;
+        opacity: 0;
+        /*アニメーション設定*/
+        transition: all .3s;
+    }
+
+        /*hoverしたら表示*/
+        nav li.has-child:hover > ul,
+        nav li.has-child ul li:hover > ul,
+        nav li.has-child:active > ul,
+        nav li.has-child ul li:active > ul {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /*ナビゲーションaタグの形状*/
+        nav li.has-child ul li a {
+            color: #fff;
+            border-bottom: solid 1px rgba(255,255,255,0.6);
+        }
+
+        nav li.has-child ul li:last-child > a {
+            border-bottom: none;
+        }
+
+        nav li.has-child ul li a:hover,
+        nav li.has-child ul li a:active {
+            background: #ff006e;
+        }
+
+
+        /*==3階層目*/
+
+        /*3階層目位置*/
+        nav li.has-child ul ul {
+            top: 0;
+            left: 182px;
+            background: #66ADF5;
+        }
+
+            nav li.has-child ul ul li a:hover,
+            nav li.has-child ul ul li a:active {
+                background: #448ED3;
+            }
+
+
+/*==768px以下の形状*/
+
+@media screen and (max-width:768px) {
+    nav {
+        padding: 0;
+    }
+
+        nav ul {
+            display: block;
+        }
+
+        nav li.has-child ul,
+        nav li.has-child ul ul {
+            position: relative;
+            left: 0;
+            top: 0;
+            width: 100%;
+            visibility: visible; /*JSで制御するため一旦表示*/
+            opacity: 1; /*JSで制御するため一旦表示*/
+            display: none; /*JSのslidetoggleで表示させるため非表示に*/
+            transition: none; /*JSで制御するためCSSのアニメーションを切る*/
+        }
+
+            nav ul li a {
+            border-bottom: 1px solid #ccc;
+        }
+
+        /*矢印の位置と向き*/
+
+        nav ul li.has-child::before {
+            left: 20px;
+        }
+
+        nav ul ul li.has-child::before {
+            transform: rotate(135deg);
+            left: 20px;
+        }
+
+        nav ul li.has-child.active::before {
+            transform: rotate(-45deg);
+        }
+}
+
+
+/*========= メニューのレイアウトのためのCSS ===============*/
+
+.h1 {
+    font-size: 2rem;
+    text-align: left;
+    padding-top: 10px;
+    /*text-transform: uppercase;*/
+}
+
+h2 {
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 0 0 30px 0;
+}
+
+p {
+    margin-top: 20px;
+}
+
+small {
+    background: #333;
+    color: #fff;
+    display: block;
+    text-align: center;
+    padding: 20px;
+}
+
+
+/*section {
+    padding: 30px;
+}
+
+section:nth-child(2n) {
+    background: #f3f3f3;*//*ここ(2階層目の)が別のセクションとかぶってる*/
+/*}*/
+
+
+
+
+/*ホーム画面*/
+.home-content p {
+    font-size: 1.125rem;
+    margin: 10px 0 42px;
+}
+.home-content h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/*背景*/
+.big-bg {
+    background-size: cover;
+    background-position: center top;
+}
+#home {
+    background-image: url(../images/main-bg.jpg);
+    min-height: 100vh;
+}
+
+/*フッター*/
+footer {
+    width: 100%;
+    height: 40px;
+    position: absolute; /*絶対位置*/
+    bottom: 0; /*下*/
+
+    text-align: center;
+    padding: 2px;/*余白*/
+    background-color: white;
+}
+
+
+/*Todo*/
+/*Todo本文*/
+article {
+    width: 80%;
+}
+/*文字色（期限超えていた時の）*/
+.tBold {
+    font-weight: bold;
+    color: red;
+}
+/*よこのやつ*/
+aside {
+    background-color: blue;
+    color:aqua;
+    width: 20%;
+}
+
+/*位置*/
+.d-contents {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+/*文字の寄せ*/
+.button-edit {
+    text-align:right;
+}
+/*検索ボックスの*/
+.box-edit {
+    border-width: 1px;
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 2px;
+    padding: 4px;
+    margin-right: 10px;
+
+}
+/*検索ボタン*/
+.send-edit {
+    border: none;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    background-color: dodgerblue;
+    border-radius: 3px;
+}
+
+/*ボタン*/
+.button-edit a {
+    border-radius: 3px;
+    margin: 2px;/*他のコントロールとの距離関係*/
+    padding: 5px;
+    color: #121212;/*文字色*/
+}
+/*編集ボタン、削除ボタン*/
+.button-edit-e {
+    background-color: #f69679;
+}
+.button-edit-d {
+    background-color: #8aa3b9;
+}
+
+/*順番入れ替えボタン*/
+.button-edit-di {
+    margin-right: 5%; 
+    margin-bottom: 2%;
+    text-align: right;
+}
+.button-edit-o {
+    border-radius: 3px; 
+    padding: 5px; 
+    color: #121212; 
+    background-color: lightgrey;
+}
+
+/*位置関係*/
+.page-button {
+    justify-content: center;
+    text-align: center;
+}
+
+
+/*アコーディオンメニュー*/
+/* Chrome、Safari以外 */
+/*要約部分のみ<summary)と詳細部分全て(details)*/
+details {
+    background-color: #ffe0b6; /*detail全体の色　#ffe0b6*/
+    border-radius: 10px; /*角丸*/
+    margin-right: 5%; /*余白右*/
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #fcc9ac; /*枠線2pxで全部そろえた*/
+}
+
+details > summary {
+    background-color: #fabea7; /*#fabea7*/
+    padding: 0.5em;
+}
+
+.span-check {
+    float: right;
+}
+
+/*要約文*/
+summary {
+    display: block;
+    border-radius: 9px; /*角丸*/
+    font-size: 1.5rem;
+}
+
+summary {
+    cursor: pointer;
+    transition: 0.2s; /* 変化を滑らかに */
+}
+    /* ホバー時のスタイル */
+    summary:hover {
+        background-color: #fffac2; /*色*/
+    }
+
+/*各セクションの装飾・・ボックスの中身*/
+/*ボックスの中身の色*/
+.article-content {
+    padding: 10px;
+    background-color: #ffe0b6; 
+    border-radius: 9px;
+    margin-top: 5px;
+}
+
+.section-arrange p {
+    background-color: white;
+    border-radius: 5px; /*角丸*/
+    padding: 10px;
+}
+
+.section-arrange h6 {
+    font-weight: bold;
+    background-color: #fabd95;
+    border-radius: 5px; /*角丸*/
+    padding: 5px;
+    display: inline-block;
+}
+
+
+/*Todo詳細を開いたとき */
+
+details[open] .article-content {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+
